@@ -3,14 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "SET DEBUG=ejs:*&& node ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "feedparser": "^2.2.9",
+    "feedparser-promised": "^2.0.1",
     "morgan": "~1.9.1",
-    "request": "^2.88.0"
-  }
+    "node-schedule": "^1.3.2",
+    "pug": "^2.0.4",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "rss": "^1.2.2",
+    "rxjs": "^6.5.2"
+  },
+  "devDependencies": {}
 }
