@@ -6,10 +6,11 @@ const tjRatedFeed = require("../tj-rated-feed");
 /* GET users listing. */
 router.get("/", async function(req, res, next) {
   try {
-    const items = await tjRatedFeed.items_with_rating
+    const top = req.query.top || 20
+    const items = tjRatedFeed.items_with_rating
     const top_items = items
       .sort((a, b) => b.rating - a.rating)
-      .slice(0, 1);
+      .slice(0, top);
   
       var exportFeed = new RSS({
         title: "Т-Ж",

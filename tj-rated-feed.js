@@ -2,11 +2,17 @@ const feedparser = require("feedparser-promised");
 const request = require("request-promise");
 const cheerio = require("cheerio");
 const schedule = require("node-schedule");
+var initial_items = require('./public/data/initial_feed.json')
 
 class TjRatedFeed {
   constructor() {
-    this.items_with_rating = this._refresh_items()
-    schedule.scheduleJob("0 0 * * *", () => this.items_with_rating = this._refresh_items()); // run everyday at midnight
+    this.items_with_rating = initial_items
+
+    // run everyday at midnight
+    schedule.scheduleJob("0 0 * * *", async () => {
+      const new_items = await this._refresh_items()
+      this.items_with_rating = new_items
+    }); 
   }
 
   async _refresh_items() {
@@ -29,20 +35,20 @@ class TjRatedFeed {
           itemsWithRating.push({ item: items[i], rating });
           i++;
         }
-      }, 1);
+      }, 6 * 1000);
     });
   }
 
   _get_rating(link) {
-    return Promise.resolve(Math.floor(Math.random() * 50000))
-    // return request({ uri: link, transform: body => cheerio.load(body) })
-    //   .then($ => {
-    //     const ratingText = $(".article-footer__views")
-    //       .text()
-    //       .replace(/\s/, "");
-    //     return Number.parseInt(ratingText) || -1;
-    //   })
-    //   .catch(err => -1);
+    return request({ uri: link, transform: body => cheerio.load(body) })
+      .then($ => {
+        const ratingText = $(".article-footer__views")
+          .text()
+          .replace(/\s/, "");
+        console.log(ratingText)
+        return Number.parseInt(ratingText) || -1;
+      })
+      .catch(err => -1);
   }
 }
 
